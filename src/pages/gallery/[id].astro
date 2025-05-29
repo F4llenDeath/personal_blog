@@ -39,6 +39,25 @@ const downloadUrl = 'https://mega.nz/folder/d20X2ZYS#cLsYdzU0cml5TDpe5emXpg';
 ---
 <Layout>
   <PageHead slot="head" title={album.data.title} description={album.data.description} />
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css"
+  />
+  <script slot="head" type="module">
+    import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.min.js';
+    import PhotoSwipe from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.min.js';
+
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: '.gallery-fullbleed',
+      children: 'a',
+      pswpModule: PhotoSwipe,
+      showHideAnimationType: 'fade',
+      exif: true,
+      toolbar: { items: ['download', 'exif', 'close'] },
+    });
+    lightbox.init();
+  </script>
   <Breadcrumbs items={[
     { href: translatePath('/gallery'), label: 'nav.gallery', icon: 'lucide:image' },
     { label: album.data.title }
@@ -74,16 +93,21 @@ const downloadUrl = 'https://mega.nz/folder/d20X2ZYS#cLsYdzU0cml5TDpe5emXpg';
       <div class="w-full sm:columns-1 md:columns-2 lg:columns-3 px-4">
       {
         images.map((image) => (
-          <Image
-            src={image}
-            alt={`Image from ${album.data.title} album`}
-            format="avif"
-            quality={30}
-            widths={[400, 800, 1200, 1600]}
-            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-            class="rounded-sm mb-4 border border-transparent hover:border-gray-300 transition-all duration-300 ease-in-out hover:shadow-lg"
-            loading="lazy"
-          />
+          <a
+            href={image.src}
+            data-pswp-width={image.width}
+            data-pswp-height={image.height}
+            data-pswp-exif
+          >
+            <Image
+              src={image}
+              alt={`Image from ${album.data.title} album`}
+              format="avif"
+              quality={60}
+              class="rounded-sm mb-4 border border-transparent hover:border-gray-300 transition-all duration-300 ease-in-out hover:shadow-lg"
+              loading="lazy"
+            />
+          </a>
         ))
       }
       </div>
